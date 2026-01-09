@@ -1,5 +1,6 @@
 ﻿using Catalog.Entities;
 using Catalog.Specifications;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Catalog.Repositories
@@ -34,39 +35,73 @@ namespace Catalog.Repositories
             return await _productCollection.Find(product => true).ToListAsync();
         }
 
-        public Task<ProductBrand> GetBrandByBrandIdAsync(string brandId)
+        public async Task<ProductBrand> GetBrandByBrandIdAsync(string brandId)
         {
-            throw new NotImplementedException();
+            return await _brandCollection.Find(b => b.Id == brandId).FirstOrDefaultAsync();
         }
 
-        public Task<Product> GetProduct(string productId)
+        public async Task<Product> GetProductById(string productId)
         {
-            throw new NotImplementedException();
+            return await _productCollection.Find(p => p.Id == productId).FirstOrDefaultAsync();
         }
 
-        public Task<Pagination<Product>> GetProductsAsync(CatalogSpecParams specParams)
+        public async Task<Pagination<Product>> GetProductsAsync(CatalogSpecParams specParams)
         {
-            throw new NotImplementedException();
+            var queryBuilder = Builders<Product>.Filter;
+            var filter = queryBuilder.Empty;
+
+            if (!string.IsNullOrEmpty(specParams.Search))
+            {
+                filter &= queryBuilder.Where(product => product.Name.ToLower().Contains(specParams.Search.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(specParams.BrandId))
+            {
+                filter &= queryBuilder.Eq(product => product.Brand.Id, specParams.BrandId);
+            }
+
+            if (!string.IsNullOrEmpty(specParams.TypeId))
+            {
+                filter &= queryBuilder.Eq(product => product.Type.Id, specParams.TypeId);
+            }
+
+            //var totalItems = await _productCollection.CountDocumentsAsync(filter);
+            //var products = await ApplyDataFilters(specParams, filter);
+
+            //return new Pagination<Product>
+            //{
+            //    PageIndex = specParams.PageIndex,
+            //    PageSize = specParams.PageSize,
+            //    TotalItems = (int)totalItems,
+            //    Items = products
+            //};
+
         }
 
-        public Task<IEnumerable<Product>> GetProductsByBrand(string brand)
+        public async Task<IEnumerable<Product>> GetProductsByBrand(string brand)
         {
-            throw new NotImplementedException();
+            return await _productCollection.
+                Find(p => p.Brand.Name.ToLower() == brand.ToLower())
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Product>> GetProductsByName(string name)
+        public async Task<IEnumerable<Product>> GetProductsByName(string name)
         {
-            throw new NotImplementedException();
+            var filter = Builders<Product>.Filter.Regex(product => product.Name, new BsonRegularExpression($".*{name}.*", "i"));
+            return await _productCollection.Find(filter).ToListAsync();
         }
 
-        public Task<ProductType> GetTypeByTypeIdAsync(string typeId)
+        public async Task<ProductType> GetTypeByTypeIdAsync(string typeId)
         {
-            throw new NotImplementedException();
+            return await _typeCollection.Find(type => type.Id == typeId).FirstOrDefaultAsync();
         }
 
-        public Task<Product> UpdateProduct(Product product)
+        public async Task<bool> UpdateProduct(Product product)
         {
-            throw new NotImplementedException();
+            var result = await _productCollection
+                .ReplaceOneAsync(p => p.Id == product.Id, product);
+
+            return result.IsAcknowledged && result.ModifiedCount > 0;
         }
     }
 }
