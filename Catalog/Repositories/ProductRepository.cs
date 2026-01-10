@@ -50,9 +50,9 @@ namespace Catalog.Repositories
             var queryBuilder = Builders<Product>.Filter;
             var filter = queryBuilder.Empty;
 
-            if (!string.IsNullOrEmpty(specParams.Search))
+            if (!string.IsNullOrEmpty(specParams.Sort))
             {
-                filter &= queryBuilder.Where(product => product.Name.ToLower().Contains(specParams.Search.ToLower()));
+                filter &= queryBuilder.Where(product => product.Name.ToLower().Contains(specParams.Sort.ToLower()));
             }
 
             if (!string.IsNullOrEmpty(specParams.BrandId))
@@ -65,16 +65,16 @@ namespace Catalog.Repositories
                 filter &= queryBuilder.Eq(product => product.Type.Id, specParams.TypeId);
             }
 
-            //var totalItems = await _productCollection.CountDocumentsAsync(filter);
-            //var products = await ApplyDataFilters(specParams, filter);
+            var totalItems = await _productCollection.CountDocumentsAsync(filter);
+            var products = await ApplyDataFilters(specParams, filter);
 
-            //return new Pagination<Product>
-            //{
-            //    PageIndex = specParams.PageIndex,
-            //    PageSize = specParams.PageSize,
-            //    TotalItems = (int)totalItems,
-            //    Items = products
-            //};
+            return new Pagination<Product>(
+                
+                specParams.PageIndex,
+                specParams.PageSize,
+                (int)totalItems,
+                products
+            );
 
         }
 
@@ -102,6 +102,30 @@ namespace Catalog.Repositories
                 .ReplaceOneAsync(p => p.Id == product.Id, product);
 
             return result.IsAcknowledged && result.ModifiedCount > 0;
+        }
+
+
+        private async Task<IReadOnlyCollection<Product>> ApplyDataFilters(CatalogSpecParams specParams, FilterDefinition<Product> filter)
+        {
+            var sortDefinition = Builders<Product>.Sort.Ascending("Name");
+
+            if (!string.IsNullOrEmpty(specParams.Sort))
+            {
+                sortDefinition = specParams.Sort switch
+                {
+                    "priceAsc" => Builders<Product>.Sort.Ascending(p => p.Price),
+                    "priceDesc" => Builders<Product>.Sort.Descending(p => p.Price),
+                    "nameDesc" => Builders<Product>.Sort.Descending(p => p.Name),
+                    _ => Builders<Product>.Sort.Ascending(p => p.Name),
+                };
+            }
+
+            return await _productCollection
+                .Find(filter)
+                .Sort(sortDefinition)
+                .Skip(specParams.PageSize * (specParams.PageSize - 1))
+                .Limit(specParams.PageSize)
+                .ToListAsync();
         }
     }
 }
