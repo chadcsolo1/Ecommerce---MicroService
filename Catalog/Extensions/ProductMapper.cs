@@ -23,6 +23,11 @@ namespace Catalog.Extensions
             };
         }
 
+        public static IEnumerable<ProductResponse> ToResponseList(this IEnumerable<Product> products)
+        {
+            return products.Select(product => product.ToResponse());
+        }
+
         // Map a list of Product entities to a list of ProductResponse DTOs
         public static Pagination<ProductResponse> ToResponse(this Pagination<Product> pagination)
         {
