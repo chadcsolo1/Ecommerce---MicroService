@@ -1,4 +1,5 @@
-﻿using Catalog.Entities;
+﻿using Catalog.Commands;
+using Catalog.Entities;
 using Catalog.Repositories;
 using Catalog.Responses;
 
@@ -38,6 +39,37 @@ namespace Catalog.Extensions
                 pagination.Data.Select(product => product.ToResponse()).ToList()
             );
             //return products.Select(product => product.ToResponse());
+        }
+
+        public static Product ToEntity(this CreateProductCommand command, ProductBrand brand, ProductType type)
+        {
+            return new Product
+            {
+                Name = command.Name,
+                Summary = command.Summary,
+                Description = command.Description,
+                ImageFile = command.ImageFile,
+                Brand = brand,
+                Type = type,
+                Price = command.Price,
+                CreatedDate = DateTime.UtcNow
+            };
+        }
+
+        public static Product ToUpdateEntity(this UpdateProductCommand command, Product existingProduct, ProductBrand brand, ProductType type)
+        {
+            return new Product
+            {
+                Id = existingProduct.Id,
+                Name = command.Name,
+                Summary = command.Summary,
+                Description = command.Description,
+                ImageFile = command.ImageFile,
+                Brand = brand,
+                Type = type,
+                Price = command.Price,
+                CreatedDate = existingProduct.CreatedDate
+            };
         }
     }
 }
