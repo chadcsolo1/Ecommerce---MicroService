@@ -1,4 +1,5 @@
 ﻿using Catalog.Commands;
+using Catalog.DTOs;
 using Catalog.Entities;
 using Catalog.Repositories;
 using Catalog.Responses;
@@ -71,5 +72,23 @@ namespace Catalog.Extensions
                 CreatedDate = existingProduct.CreatedDate
             };
         }
+
+        public static ProductDto ToDto(this ProductResponse product)
+        {
+            if (product == null) return null;
+
+            return new ProductDto(
+                product.Id,
+                product.Name,
+                product.Summary,
+                product.Description,
+                product.ImageFile,
+                new BrandDto(product.Brand.Id, product.Brand.Name),
+                new TypeDto(product.Type.Id, product.Type.Name),
+                product.Price,
+                product.CreatedDate
+            );
+        }
+
     }
 }
