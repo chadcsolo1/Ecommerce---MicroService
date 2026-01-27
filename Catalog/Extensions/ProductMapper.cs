@@ -90,5 +90,20 @@ namespace Catalog.Extensions
             );
         }
 
+        public static UpdateProductCommand ToCommand(this UpdateProductDto dto, string id)
+        {
+            return new UpdateProductCommand
+            {
+                Id = id,
+                Name = dto.Name,
+                Summary = dto.Sumamry,
+                Description = dto.Description,
+                ImageFile = dto.ImageFile,
+                BrandId = dto.BrandId,
+                TypeId = dto.TypeId,
+                Price = dto.Price
+            };
+        }
+
     }
 }

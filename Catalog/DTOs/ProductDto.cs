@@ -28,7 +28,7 @@ namespace Catalog.DTOs
         } = string.Empty;
 
         [Required]
-        public string Sumamry
+        public string Summary
         {
             get;
             init;
