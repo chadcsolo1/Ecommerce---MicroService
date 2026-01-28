@@ -89,5 +89,42 @@ namespace Catalog.Controllers
             return NoContent();
         }
 
+        [HttpGet("GetAllBrands")]
+        public async Task<ActionResult<IEnumerable<BrandDto>>> GetAllBrands()
+        {
+            var query = new GetAllBrandsQuery();
+            var results = await _mediator.Send(query);
+            if (results == null || !results.Any())
+            {
+                return NotFound();
+            }
+            return Ok(results);
+        }
+
+        [HttpGet("GetAllTypes")]
+        public async Task<ActionResult<IEnumerable<TypeDto>>> GetAllTypes()
+        {
+            var query = new GetAllTypesQuery();
+            var results = await _mediator.Send(query);
+            if (results == null || !results.Any())
+            {
+                return NotFound();
+            }
+            return Ok(results);
+        }
+
+        [HttpGet("brand/{brand}", Name = "GetProductsByBrandName")]
+        public async Task<ActionResult<IList<ProductDto>>> GetProductsByBrandName(string brand)
+        {
+            var query = new GetProductByBrandQuery(brand);
+            var results = await _mediator.Send(query);
+            if (results == null || !results.Any())
+            {
+                return NotFound();
+            }
+            return Ok(results);
+
+        }
+
     }
 }
