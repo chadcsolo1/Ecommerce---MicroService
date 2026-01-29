@@ -96,7 +96,7 @@ namespace Catalog.Extensions
             {
                 Id = id,
                 Name = dto.Name,
-                Summary = dto.Sumamry,
+                Summary = dto.Summary,
                 Description = dto.Description,
                 ImageFile = dto.ImageFile,
                 BrandId = dto.BrandId,

@@ -123,7 +123,7 @@ namespace Catalog.Repositories
             return await _productCollection
                 .Find(filter)
                 .Sort(sortDefinition)
-                .Skip(specParams.PageSize * (specParams.PageSize - 1))
+                .Skip(specParams.PageSize * (specParams.PageIndex - 1))
                 .Limit(specParams.PageSize)
                 .ToListAsync();
         }
