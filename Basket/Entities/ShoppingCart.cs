@@ -12,7 +12,11 @@
             get;
             set;
         } = new List<CartItem>();
-        
+        public ShoppingCart()
+        {
+            
+        }
+
         public ShoppingCart(string userName)
         {
             UserName = userName;

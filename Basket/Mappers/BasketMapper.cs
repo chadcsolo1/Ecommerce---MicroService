@@ -1,4 +1,5 @@
-﻿using Basket.Entities;
+﻿using Basket.Commands;
+using Basket.Entities;
 using Basket.Responses;
 
 namespace Basket.Mappers
@@ -16,6 +17,23 @@ namespace Basket.Mappers
                     item.Quantity,
                     item.ImageFile)).ToList()
             );
+        }
+
+        public static ShoppingCart ToEntity(this CreateShoppingCartCommand command)
+        {
+            var shoppingCart = new ShoppingCart
+            {
+                UserName = command.UserName,
+                Items = command.Items.Select(item => new CartItem
+                {
+                    ProductId = item.ProductId,
+                    ProductName = item.ProductName,
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+                    ImageFile = item.ImageFile
+                }).ToList()
+            };
+            return shoppingCart;
         }
     }
 }

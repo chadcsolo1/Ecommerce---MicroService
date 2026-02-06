@@ -30,7 +30,7 @@ namespace Basket.Repositories
         }
 
         //Upsert = Insert + Update
-        public async Task<ShoppingCart> UpdateBasket(ShoppingCart shoppingCart)
+        public async Task<ShoppingCart> UpsertBasket(ShoppingCart shoppingCart)
         {
             await _redisCache.SetStringAsync(shoppingCart.UserName, JsonConvert.SerializeObject(shoppingCart));
             return await GetBasketAsync(shoppingCart.UserName);

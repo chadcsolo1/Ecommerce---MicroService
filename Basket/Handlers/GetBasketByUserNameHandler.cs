@@ -1,4 +1,5 @@
 ﻿using Basket.Entities;
+using Basket.Mappers;
 using Basket.Queries;
 using Basket.Repositories;
 using Basket.Responses;
@@ -17,9 +18,9 @@ namespace Basket.Handlers
         public async Task<ShoppingCartResponse> Handle(GetBasketByUserNameQuery request, CancellationToken cancellationToken)
         {
             //Get Shopping Cart
-            var basket = await _basketRepository.GetBasketAsync(request.UserName);
+            var shoppingCart = await _basketRepository.GetBasketAsync(request.UserName);
             
-            if (basket == null)
+            if (shoppingCart == null)
             {
                 return new ShoppingCartResponse(request.UserName)
                 {
@@ -27,7 +28,7 @@ namespace Basket.Handlers
                     Items = new List<ShoppingCartItemResponse>()
                 };
             }
-            return ShoppingCart.ToResponse();
+            return shoppingCart.ToResponse();
         }
     }
 }
