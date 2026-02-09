@@ -14,8 +14,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
 //Add Swagger
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
 
 //Register MediatR
 var assembly = new Assembly[] 
@@ -23,6 +23,8 @@ var assembly = new Assembly[]
     Assembly.GetExecutingAssembly(),
     typeof(CreateShoppingCartCommand).Assembly
 };
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assembly));
 
 //Redis
 builder.Services.AddStackExchangeRedisCache( options =>
