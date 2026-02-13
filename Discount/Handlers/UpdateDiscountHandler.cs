@@ -8,15 +8,15 @@ using MediatR;
 
 namespace Discount.Handlers
 {
-    public class CreateDiscountHandler : IRequestHandler<CreateDiscountCommand, CouponDto>
+    public class UpdateDiscountHandler : IRequestHandler<UpdateDiscountCommand, CouponDto>
     {
         private readonly IDiscountRepository _discountRepository;
 
-        public CreateDiscountHandler(IDiscountRepository discountRepository)
+        public UpdateDiscountHandler(IDiscountRepository discountRepository)
         {
             _discountRepository = discountRepository;
         }
-        public async Task<CouponDto> Handle(CreateDiscountCommand request, CancellationToken cancellationToken)
+        public async Task<CouponDto> Handle(UpdateDiscountCommand request, CancellationToken cancellationToken)
         {
             //Input Validation
             var validationErrors = new Dictionary<string, string>();
@@ -33,17 +33,16 @@ namespace Discount.Handlers
             if (validationErrors.Any())
                 throw GrpcErrorHelper.CreateValidationException(validationErrors);
 
-            //Convert to Entity
-            var coupon = request.ToEntity();
+            //Convert command to entity
+            var couponEntity = request.ToUpdateEntity();
 
-            //Save to Db
-            var createdCoupon = await _discountRepository.CreateDiscount(coupon);
+            var updatedCoupon = await _discountRepository.UpdateDiscount(couponEntity);
 
-            if (!createdCoupon)
-                throw new RpcException(new Status(StatusCode.Internal, $"Failed to create discount for product {request.ProductName}."));
+            if (!updatedCoupon)
+                throw new RpcException(new Status(StatusCode.NotFound, $"Failed to update the discount for product {request.ProductName}."));
 
-            //Convert to DTO and return
-            return coupon.ToDto();
+            //Convert entity back to DTO
+            return couponEntity.ToDto();
         }
     }
 }
