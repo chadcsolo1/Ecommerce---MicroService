@@ -1,4 +1,4 @@
-﻿using Discount.Entities;
+﻿﻿using Discount.Entities;
 
 namespace Discount.Repositories
 {
