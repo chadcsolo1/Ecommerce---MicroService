@@ -1,5 +1,7 @@
+using Discount.Extensions;
 using Discount.Handlers;
 using Discount.Repositories;
+using Discount.Services;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,39 +19,36 @@ var assemblies = new Assembly[]
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assemblies));
 
 //Repositories
-//builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
-
-//Might need below code to debug Repository registration issue - This will debug the dependency injection.
-//using Microsoft.Extensions.DependencyInjection;
-
-//var app = builder.Build();
-
-//// Test the DI container
-//using (var scope = app.Services.CreateScope())
-//{
-//    var discountRepo = scope.ServiceProvider.GetRequiredService<IDiscountRepository>();
-//    Console.WriteLine(discountRepo != null ? "IDiscountRepository resolved successfully!" : "Failed to resolve IDiscountRepository.");
-//}
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
 //Grpc
 builder.Services.AddGrpc();
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+//builder.Services.AddControllers();
+//// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+//builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+//Migrate Database
+app.MigrateDatabase<Program>();
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints => {
+    endpoints.MapGrpcService<DiscountService>();
+});
+
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.MapOpenApi();
+//}
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllers();
 
 app.Run();
