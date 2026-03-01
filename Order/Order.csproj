@@ -25,12 +25,9 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Mappers\" />
     <Folder Include="Extensions\" />
-    <Folder Include="DTOs\" />
     <Folder Include="Commands\" />
     <Folder Include="Behavior\" />
-    <Folder Include="Queries\" />
   </ItemGroup>
 
 </Project>

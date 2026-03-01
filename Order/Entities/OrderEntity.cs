@@ -1,6 +1,6 @@
 ﻿namespace Order.Entities
 {
-    public class Order : EntityBase
+    public class OrderEntity : EntityBase
     {
         public string UserName { get; set; } = string.Empty;
         public decimal? TotalPrice { get; set; }
