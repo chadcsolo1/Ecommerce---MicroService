@@ -26,8 +26,6 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Extensions\" />
-    <Folder Include="Commands\" />
-    <Folder Include="Behavior\" />
   </ItemGroup>
 
 </Project>
