@@ -51,6 +51,48 @@ namespace Order.Mappers
             orderToUpdate.PaymentMethod = request.PaymentMethod;
         }
 
+        public static CheckoutOrderCommand ToCommand(this CreateOrderDto dto)
+        {
+            return new CheckoutOrderCommand
+            {
+                UserName = dto.UserName,
+                TotalPrice = dto.TotalPrice,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email,
+                Address = dto.Address,
+                Country = dto.Country,
+                State = dto.State,
+                ZipCode = dto.ZipCode,
+                CardNumber = dto.CardNumber,
+                Expiration = dto.Expiration,
+                Cvv = dto.Cvv,
+                PaymentMethod = dto.PaymentMethod
+            };
+
+        }
+
+        public static UpdateOrderCommand ToUpdateCommand(this OrderingDto dto)
+        {
+            return new UpdateOrderCommand
+            {
+                Id = dto.Id,
+                UserName = dto.UserName,
+                TotalPrice = dto.TotalPrice,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email,
+                Address = dto.Address,
+                Country = dto.Country,
+                State = dto.State,
+                ZipCode = dto.ZipCode,
+                CardNumber = dto.CardNumber,
+                Expiration = dto.Expiration,
+                Cvv = dto.Cvv,
+                PaymentMethod = dto.PaymentMethod
+            };
+        }
+
 
     }
 
