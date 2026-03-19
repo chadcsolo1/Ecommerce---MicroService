@@ -8,7 +8,7 @@ namespace Order.Data
         public OrderContext(DbContextOptions<OrderContext> options) : base(options)
         {
         }
-        public DbSet<Entities.OrderEntity> Orders { get; set; }
+        public DbSet<OrderEntity> Orders { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

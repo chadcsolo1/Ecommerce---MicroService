@@ -14,7 +14,7 @@ namespace Order.Data
                 .Build();
 
             //Set connection string from configuration object
-            var connectionString = configuration.GetConnectionString("OrderingConnectionString");
+            var connectionString = configuration.GetConnectionString("DefaultSQLConnection");
             var optionsBuilder = new DbContextOptionsBuilder<OrderContext>();
             optionsBuilder.UseSqlServer(connectionString);
 
