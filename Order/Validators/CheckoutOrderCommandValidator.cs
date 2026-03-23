@@ -25,7 +25,7 @@ namespace Order.Validators
                 .CreditCard().When(order => !string.IsNullOrEmpty(order.CardNumber))
                 .WithMessage("{PropertyName} must be valid credit card number.");
             RuleFor(order => order.Expiration)
-                .Matches(@"^(0[1-9]|1[0-2])\/>([0-9]{2})$")
+                .Matches(@"^(0[1-9]|1[0-2])\/?([0-9]{2})$")
                 .When(order => !string.IsNullOrEmpty(order.Expiration))
                 .WithMessage("{PropertyName} must be in MM/YY format");
             RuleFor(order => order.Cvv)
