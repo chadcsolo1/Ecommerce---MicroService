@@ -69,7 +69,7 @@ namespace EventBus.Messages.Events
             get;
             set;
         } 
-        public string? PaymentMethod
+        public int PaymentMethod
         {
             get;
             set;
