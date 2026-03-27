@@ -9,7 +9,7 @@ namespace EventBus.Messages.Events
             get;
             set;
         } 
-        public decimal TotalPrice
+        public decimal? TotalPrice
         {
             get;
             set;
@@ -69,7 +69,7 @@ namespace EventBus.Messages.Events
             get;
             set;
         } 
-        public int PaymentMethod
+        public int? PaymentMethod
         {
             get;
             set;
