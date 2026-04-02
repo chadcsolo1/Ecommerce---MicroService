@@ -16,5 +16,6 @@
         public string Expiration { get; set; } = string.Empty;
         public string Cvv { get; set; } = string.Empty;
         public int? PaymentMethod { get; set; }
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
     }
 }

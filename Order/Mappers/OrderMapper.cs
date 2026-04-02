@@ -1,7 +1,10 @@
 ﻿using EventBus.Messages.Events;
+using Newtonsoft.Json;
 using Order.Commands;
+using Order.Constants;
 using Order.DTOs;
 using Order.Entities;
+using System.Text.Json.Serialization;
 
 namespace Order.Mappers
 {
@@ -111,6 +114,36 @@ namespace Order.Mappers
                 CardNumber = message.CardNumber!,
                 Expiration = message.CardExpiration!,
                 PaymentMethod = message.PaymentMethod ?? 0
+            };
+        }
+
+        public static OutboxMessage ToOutboxMessage(OrderEntity order) 
+        {
+            return new OutboxMessage
+            {
+                CorrelationId = Guid.NewGuid().ToString(),
+                Type = OutboxMessageTypes.OrderCreated.ToString(),
+                OccurredOn = DateTime.UtcNow,
+                Content = JsonConvert.SerializeObject(new
+                {
+                    order.Id,
+                    order.UserName,
+                    order.TotalPrice,
+                    order.FirstName,
+                    order.LastName,
+                    order.Email,
+                    order.Address,
+                    order.Country,
+                    order.State,
+                    order.ZipCode,
+                    //PCI Sensitive - in a production application we would not serialize the payment information
+                    order.CardName,
+                    order.CardNumber,
+                    order.Expiration,
+                    order.Cvv,
+                    order.PaymentMethod,
+                    order.Status
+                })
             };
         }
 
