@@ -9,7 +9,7 @@ namespace EventBus.Messages.Events
     public class BaseIntegrationEvent
     {
         //This class will help us to track issues
-        public Guid CorrelationId { get; set; }
+        public Guid? CorrelationId { get; set; }
         public DateTime CreationDate { get; set; }
         public BaseIntegrationEvent()
         {

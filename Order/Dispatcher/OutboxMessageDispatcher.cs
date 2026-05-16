@@ -30,7 +30,7 @@ namespace Order.Dispatcher
 
                 // Add logic to process outbox messages using dbContext
                 var pendingMessages = await dbContext.OutboxMessages
-                    .Where(x => x.isProcessed == null)
+                    .Where(x => x.ProcessedOn == null)
                     .OrderBy(x => x.OccurredOn)
                     .Take(20)
                     .ToListAsync(stoppingToken);
