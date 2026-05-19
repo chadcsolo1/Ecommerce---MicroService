@@ -27,6 +27,18 @@ namespace Payment.Consumers
                     OrderId = message.Id,
                     CorrelationId = message.CorrelationId ?? Guid.NewGuid()
                 };
+                await _publishedEndpoint.Publish(completedEvent);
+                _logger.LogInformation("Payment completed for Order Id: {OrderId}", message.Id);
+            }else
+            {
+                var failedEvent = new PaymentFailedEvent
+                {
+                    OrderId = message.Id,
+                    CorrelationId = message.CorrelationId ?? Guid.NewGuid(),
+                    Reason = "Total price was zero or negative."
+                };
+                await _publishedEndpoint.Publish(failedEvent);
+                _logger.LogWarning("Payment failed for Order Id: {OrderId}. Reason: {Reason}", message.Id, failedEvent.Reason);
             }
         }
     }
